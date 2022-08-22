@@ -11,10 +11,10 @@ DEFAULT_MODULE_NAME = "Module"
 class Module(ABC):
     """Torch-like module."""    
 
-    def __init__(self, training = True) -> None:
+    def __init__(self) -> None:
         self._parameters: List[Tensor] = []
         self._modules: List[Module] = []
-        self._training = training
+        self._training = True
         self._module_name = DEFAULT_MODULE_NAME
 
 

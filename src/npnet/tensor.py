@@ -154,24 +154,31 @@ class Tensor:
         
         self._shape = self.data.shape
 
-        self.grad: Union[int, None] = .0 if requires_grad else None
         self.parents = parents or ()
         self._requires_grad = requires_grad
+        if requires_grad:
+            self.grad= np.zeros_like(self.data,dtype=self.dtype) 
+        else:
+            self.grad = None
+
+
         self._back_grad_fn = lambda: None
 
     @property
     def requires_grad(self) -> bool:
         return self._requires_grad
 
-        
+    @requires_grad.setter
+    def requires_grad(self, requires_grad: bool):
+        if requires_grad:
+            self.grad= np.zeros_like(self.data,dtype=self.dtype) 
+        else:
+            self.grad = None
+        self._requires_grad = requires_grad
+
     @property
     def shape(self) -> Tuple:
         return self._shape
-
-    @requires_grad.setter
-    def requires_grad(self, requires_grad: bool):
-        self.grad = .0 if requires_grad else None
-        self._requires_grad = requires_grad
 
     def __repr__(self):
         return f"Tensor(data={self.data}, grad={self.grad}, requires_grad={self.requires_grad})"
