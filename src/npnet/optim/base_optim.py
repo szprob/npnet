@@ -13,8 +13,9 @@ class BaseOptimizer(ABC):
         self._lr = lr
 
     def zero_grad(self):
-        for parameter in self._parameters:
-            
+        for param in self._parameters:
+            if param.requires_grad:
+                
 
 
             if parameter.requires_grad == False:

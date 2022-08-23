@@ -114,7 +114,7 @@ class Tensor:
     """Basic torch-like tensor class.
 
     Attributes:
-        data (Union[Tensor,np.ndarray]): 
+        data (Union[Tensor,np.ndarray,List,float,int]): 
             Data storing.
         parents (Optional[Tuple[Tensor]], optional):    
             Parents tensor. 
@@ -207,7 +207,7 @@ class Tensor:
         if not self.requires_grad:
             raise ValueError("The `requires_grad` should be True")
 
-        self.grad =  np.ones(self.data.shape)
+        self.grad =  np.ones(self.data.shape,dtype=self.dtype)
 
         tensor_queue = [self]
         while len(tensor_queue):
@@ -215,10 +215,28 @@ class Tensor:
             tensor._back_grad_fn()
             tensor_queue.extend(list(tensor.parents))
 
+class Parameter(Tensor):
+    """Basic torch-like Parameter class.
 
+    Attributes:
+        shape (Union[Tuple,List]): 
+            Data storing.
+        requires_grad (bool): 
+            Defaults to False.
+        dtype (str ): 
+            Data type of tensor.
+            Defaults to 'float32'.
+    
+    """    
+    def __init__(
+        self, 
+        shape: Tuple | List, 
+        requires_grad:bool= True,
+        dtype:str = 'float32',
+    ) -> None:
 
-
-
+        data= np.random.uniform(-1/2,1/2,size=shape).astype(dtype)
+        Tensor.__init__(data=data,requires_grad=requires_grad,dtype=dtype)
 
 
 if __name__ == "__main__":
@@ -230,10 +248,18 @@ if __name__ == "__main__":
     n2.shape
 
     t1=Tensor(n1)
+    t2=t1 + t1 
+    t2=t2**2
+    t2.backward()
+    t2
+    t1
+
+
     t2=Tensor(n2)
     t3=t1@t2
     t4=t3**2
     t5=t4.T()
+    t5=t5**2
     t5.backward()
     t5
     t4

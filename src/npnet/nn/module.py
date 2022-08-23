@@ -2,10 +2,9 @@ from __future__ import annotations
 from abc import ABC, abstractmethod
 from typing import List, Any, Set
 import os
+import collections
 
 from npnet.tensor import Tensor
-
-DEFAULT_MODULE_NAME = "Module"
 
 
 class Module(ABC):
@@ -15,8 +14,8 @@ class Module(ABC):
         self._parameters: List[Tensor] = []
         self._modules: List[Module] = []
         self._training = True
-        self._module_name = DEFAULT_MODULE_NAME
-
+        self._module_name = "Module"
+        self.state_dict = collections.OrderedDict()
 
     @abstractmethod
     def forward(self, input: Tensor) -> Tensor:
@@ -77,3 +76,26 @@ class Module(ABC):
             children_modules_description = f"Children modules: {os.linesep} {os.linesep.join(modules_description_list)}"
 
         return self.module_name + children_modules_description
+
+
+if __name__ == "__main__":
+    class Linear(Module):
+        def __init__(self, in_size:int, out_size:int) -> None:
+            super().__init__()
+            weights_data: np.ndarray = np.random.uniform(size=in_size * out_size).reshape((in_size, out_size))
+            self.weights = Tensor(weights_data, requires_grad=True)
+            self.b = Tensor(np.random.uniform(size=out_size), requires_grad=True)
+
+            self.add_parameter(self.weights)
+            self.add_parameter(self.b)
+
+        def forward(self, input: Tensor)->Tensor:
+            tmp = input @ self.weights
+            out = tmp + self.b
+            return out
+
+    tmp = Linear(10,2)
+
+
+    
+

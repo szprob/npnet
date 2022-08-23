@@ -1,21 +1,15 @@
-from npnet.tensor import Tensor
+from npnet.tensor import Parameter
 import numpy as np
 from npnet.nn.module import Module
 
 class Linear(Module):
-    def __init__(self, in_size:int, out_size:int) -> None:
+    def __init__(self, input_dim:int, output_dim:int) -> None:
         super().__init__()
-        weights_data: np.ndarray = np.random.uniform(size=in_size * out_size).reshape((in_size, out_size))
-        self.weights = Variable(weights_data, requires_grad=True)
-        self.b = Variable(np.random.uniform(size=out_size), requires_grad=True)
-
-        self.add_parameter(self.weights)
-        self.add_parameter(self.b)
-
-    def reset_parameters(self):
+        self.module_name = 'Linear'
+        self.w = Parameter(shape = (input_dim,output_dim))
+        self.b=  Parameter(shape = (output_dim))
         
-
     def forward(self, input: Tensor)->Tensor:
-        tmp = input @ self.weights
+        tmp = input @ self.w
         out = tmp + self.b
-        return 
+        return out
