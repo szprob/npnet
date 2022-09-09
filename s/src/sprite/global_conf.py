@@ -1,0 +1,6 @@
+TEMP_PATH = "/tmp/.sprite"
+HDFS_ADDRESS = "http://dts-sg-hadoop01:50070/"
+HDFS_PATH = "/workspace/ml/nlp/sprite"
+BRICKS_HDFS_PATH = "/workspace/ml/nlp/sprite/bricks"
+SPELLING_CORRECTION_HDFS_PATH = "/workspace/ml/nlp/sprite/spelling_correction"
+TOXIC_DETECTION_HDFS_PATH = "/workspace/ml/nlp/sprite/toxic_detection"
